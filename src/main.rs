@@ -1,6 +1,8 @@
 mod ipapi;
 mod openmeteo;
 
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
 use ipapi::get_ip_geo_location;
 use openmeteo::get_current_weather;
 
@@ -13,13 +15,17 @@ fn main() {
     println!("\tLongtitude: {}", location.lon);
     println!("");
 
-    let weather = get_current_weather(location.lat, location.lon);
+    let weather = get_current_weather(location.lat, location.lon, &location.timezone);
     println!("Weather:");
     println!("\tForecast: {}", weather.weather_code);
     println!("\tTemperature: {}", weather.temperature_2m);
     println!("\tApparent Temperature: {}", weather.apparent_temperature);
     println!("\tHumidity: {}%", weather.relative_humidity_2m);
     println!("\tPrecipitation: {}mm", weather.precipitation);
-    println!("\tWind Speed: {}m/s", weather.wind_speed_10m);
-    println!("\tLast fetched: {}", weather.time);
+    println!("\tWind Speed: {}km/h", weather.wind_speed_10m);
+
+    let last_updated = SystemTime::now()
+        .duration_since(UNIX_EPOCH + Duration::from_secs(weather.time))
+        .expect("Time went backwards");
+    println!("\tLast updated: {} minutes ago", last_updated.as_secs()/60);
 }

@@ -8,6 +8,7 @@ pub struct GeoLocation {
     pub city: String,
     pub lat: f64,
     pub lon: f64,
+    pub timezone: String,
 }
 
 pub fn get_ip_geo_location() -> GeoLocation {
