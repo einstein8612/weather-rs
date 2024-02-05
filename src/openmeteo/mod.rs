@@ -20,6 +20,22 @@ pub struct WeatherData {
     pub wind_speed_10m: f64,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct GeocodingResponse {
+    pub results: Vec<Geocode>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Geocode {
+    pub name: String,
+    pub latitude: f64,
+    pub longitude: f64,
+    pub timezone: String,
+    pub population: i64,
+    pub country: String,
+}
+
+
 pub fn get_current_weather(latitude: f64, longtitude: f64, time_zone: &str) -> WeatherData {
     let url = format!("https://api.open-meteo.com/v1/forecast?\
         latitude={}&longitude={}\
@@ -31,4 +47,15 @@ pub fn get_current_weather(latitude: f64, longtitude: f64, time_zone: &str) -> W
     let response = reqwest::blocking::get(url).unwrap();
     let weather_response: WeatherResponse = response.json().unwrap();
     weather_response.current
+}
+
+pub fn search_geocoding(city: &str) -> Option<Geocode> {
+    let url = format!("https://geocoding-api.open-meteo.com/v1/search?name={}&count=1", city);
+
+    let response = reqwest::blocking::get(url).unwrap();
+    let geocode_response: GeocodingResponse = response.json().unwrap();
+    match geocode_response.results.first() {
+        Some(geocode) => Some(geocode.clone()),
+        None => None,
+    }
 }
