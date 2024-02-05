@@ -18,8 +18,8 @@ fn main() {
     let weather = get_current_weather(location.lat, location.lon, &location.timezone);
     println!("Weather:");
     println!("\tForecast: {}", weather.weather_code);
-    println!("\tTemperature: {}", weather.temperature_2m);
-    println!("\tApparent Temperature: {}", weather.apparent_temperature);
+    println!("\tTemperature: {}°C", weather.temperature_2m);
+    println!("\tApparent Temperature: {}°C", weather.apparent_temperature);
     println!("\tHumidity: {}%", weather.relative_humidity_2m);
     println!("\tPrecipitation: {}mm", weather.precipitation);
     println!("\tWind Speed: {}km/h", weather.wind_speed_10m);
